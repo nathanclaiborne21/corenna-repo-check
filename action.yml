@@ -1,5 +1,5 @@
 name: Corenna repo check
-description: Check whether a GitHub repo can be built into a signed Android app (or an iPhone app, in beta), and what the stores will ask for.
+description: Check if your repo can become a signed Android or iPhone (beta) app, and what the app stores will ask for.
 author: Corenna
 branding:
   icon: smartphone
