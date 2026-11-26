@@ -1,0 +1,48 @@
+name: Corenna repo check
+description: Check whether a GitHub repo can be built into a signed Android app (or an iPhone app, in beta), and what the stores will ask for.
+author: Corenna
+branding:
+  icon: smartphone
+  color: green
+
+inputs:
+  repository:
+    description: The public repo to check, as owner/name or a github.com link. Defaults to the repo the workflow runs in.
+    required: false
+    default: ${{ github.repository }}
+  platform:
+    description: android or ios. iPhone builds are in beta.
+    required: false
+    default: android
+  fail-on-blocking:
+    description: Set to true to fail the step when the check finds a problem that would stop the build.
+    required: false
+    default: "false"
+
+outputs:
+  checked:
+    description: true when the check ran. false when the repo is private or missing, or the check could not be reached.
+    value: ${{ steps.check.outputs.checked }}
+  ready:
+    description: true when nothing in the repo blocks a build.
+    value: ${{ steps.check.outputs.ready }}
+  blocking:
+    description: How many problems would stop the build.
+    value: ${{ steps.check.outputs.blocking }}
+  warnings:
+    description: How many things are worth a look but do not stop the build.
+    value: ${{ steps.check.outputs.warnings }}
+  report-url:
+    description: The full report on corenna.dev.
+    value: ${{ steps.check.outputs.report-url }}
+
+runs:
+  using: composite
+  steps:
+    - id: check
+      shell: bash
+      env:
+        INPUT_REPOSITORY: ${{ inputs.repository }}
+        INPUT_PLATFORM: ${{ inputs.platform }}
+        INPUT_FAIL_ON_BLOCKING: ${{ inputs.fail-on-blocking }}
+      run: bash "$GITHUB_ACTION_PATH/check.sh"
